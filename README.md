@@ -8,6 +8,29 @@ Anti-slop is first and foremost the ruleset I use with my work, projects, and te
 
 **This project is meant to be vendored**, not treated as a fixed npm dependency. There is no official npm package. Copy the rules into your repository, read them, and change them to match your team's standards. The bundled agent skill handles the initial copy and configuration; after that, the vendored files are yours to maintain and make your own. Community-maintained forks and packages are welcome, but their compatibility and release lifecycle belong to their maintainers.
 
+## Install from npm (fork)
+
+This fork publishes the rules as [`@adriandmitroca/oxlint-plugin-anti-slop`](https://www.npmjs.com/package/@adriandmitroca/oxlint-plugin-anti-slop). Install it with `oxlint` and `@oxlint/plugins` at the same version:
+
+```bash
+npm i -D oxlint@1.78.0 @adriandmitroca/oxlint-plugin-anti-slop
+```
+
+```json
+{
+  "jsPlugins": [
+    "@adriandmitroca/oxlint-plugin-anti-slop",
+    "@adriandmitroca/oxlint-plugin-anti-slop/effect"
+  ],
+  "rules": {
+    "anti-slop/no-reflect-get": "error",
+    "anti-slop-effect/prefer-effect-match": "error"
+  }
+}
+```
+
+The `/effect` entry point is optional. Rule names are the same as in the configuration below.
+
 ## Install with an agent skill
 
 ```bash

@@ -1,14 +1,31 @@
 {
-  "name": "oxlint-plugin-anti-slop",
+  "name": "@adriandmitroca/oxlint-plugin-anti-slop",
   "version": "0.1.2",
-  "private": true,
   "description": "Opinionated Oxlint rules that reject low-evidence TypeScript and JavaScript patterns.",
   "type": "module",
-  "exports": "./src/index.ts",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/adriandmitroca/anti-slop.git"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./effect": {
+      "types": "./dist/effect/index.d.ts",
+      "default": "./dist/effect/index.js"
+    }
+  },
   "files": [
-    "src"
+    "dist"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
+    "build": "rm -rf dist && tsc -p tsconfig.build.json && cp src/vendor/eslint-stylistic/padding-line-options.d.ts dist/vendor/eslint-stylistic/",
+    "prepublishOnly": "pnpm check && pnpm build",
     "check": "pnpm lint && pnpm test && pnpm typecheck && pnpm check:skill-assets",
     "lint": "oxlint src",
     "test": "tsx src/rules/require-readable-spacing.test.ts && tsx src/rules/require-readable-spacing-cli.test.ts && tsx src/rules/no-array-filter-map.test.ts && tsx src/rules/no-reduce-accumulator-copy.test.ts && tsx src/rules/no-chained-type-assertions.test.ts && tsx src/rules/no-conditional-empty-object-spread.test.ts && tsx src/rules/no-unsafe-dictionary-type.test.ts && tsx src/rules/no-known-value-widening.test.ts && tsx src/rules/no-object-parameters.test.ts && tsx src/rules/no-unknown-parameters.test.ts && tsx src/rules/no-runtime-typeof.test.ts && tsx src/rules/no-shape-in-symbol-names.test.ts && tsx src/rules/no-unknown-returns.test.ts && tsx src/rules/no-unknown-type-aliases.test.ts && tsx src/rules/no-widen-then-assert.test.ts && tsx src/rules/no-reflect-get.test.ts && tsx src/rules/no-reflect-apply.test.ts && tsx src/rules/no-module-mocking.test.ts && tsx src/rules/require-safety-comment-for-type-assertion.test.ts && tsx src/effect/rules/no-service-constructor-imports.test.ts && tsx src/effect/rules/no-manual-tag-comparison.test.ts && tsx src/effect/rules/no-manual-effect-error-tag.test.ts && tsx src/effect/rules/no-manual-tagged-construction.test.ts && tsx src/effect/rules/prefer-effect-match.test.ts",
