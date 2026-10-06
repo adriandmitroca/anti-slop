@@ -10,7 +10,7 @@ Anti-slop is first and foremost the ruleset I use with my work, projects, and te
 
 ## Install from npm (fork)
 
-This fork publishes the rules as [`@adriandmitroca/oxlint-plugin-anti-slop`](https://www.npmjs.com/package/@adriandmitroca/oxlint-plugin-anti-slop). Install it with `oxlint` and `@oxlint/plugins` at the same version:
+This fork publishes the rules as [`@adriandmitroca/oxlint-plugin-anti-slop`](https://www.npmjs.com/package/@adriandmitroca/oxlint-plugin-anti-slop). The package depends on `@oxlint/plugins@1.78.0`. Install `oxlint` at the same version:
 
 ```bash
 npm i -D oxlint@1.78.0 @adriandmitroca/oxlint-plugin-anti-slop
