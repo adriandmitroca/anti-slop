@@ -10,11 +10,75 @@ Anti-slop is first and foremost the ruleset I use with my work, projects, and te
 
 ## Install from npm (fork)
 
-This fork publishes the rules as [`@adriandmitroca/oxlint-plugin-anti-slop`](https://www.npmjs.com/package/@adriandmitroca/oxlint-plugin-anti-slop). Requires `oxlint` 1.78.0 or later:
+This fork publishes the rules as [`@adriandmitroca/oxlint-plugin-anti-slop`](https://www.npmjs.com/package/@adriandmitroca/oxlint-plugin-anti-slop). It requires `oxlint` 1.78.0 or later.
 
 ```bash
 npm i -D oxlint @adriandmitroca/oxlint-plugin-anti-slop
 ```
+
+### Presets
+
+The package ships two presets:
+
+| Preset | Plugin | Rules |
+| --- | --- | --- |
+| `recommended` | `anti-slop` | Every generic rule, plus `oxc/no-accumulating-spread`, at `error` |
+| `effect` | `anti-slop-effect` | Every [Effect rule](#effect-rules) at `error`. Use it only in projects that depend on Effect. |
+
+New rules join their preset in a minor release. If you want to opt in to each new rule, list the rules yourself (see [Pick rules manually](#pick-rules-manually)).
+
+With `.oxlintrc.json`, extend the preset files by path. Oxlint does not resolve package names in `extends`.
+
+```json
+{
+  "extends": [
+    "./node_modules/@adriandmitroca/oxlint-plugin-anti-slop/configs/recommended.json",
+    "./node_modules/@adriandmitroca/oxlint-plugin-anti-slop/configs/effect.json"
+  ]
+}
+```
+
+With `oxlint.config.ts`, import the presets:
+
+```ts
+import { defineConfig } from "oxlint";
+import { effect, recommended } from "@adriandmitroca/oxlint-plugin-anti-slop/configs";
+
+export default defineConfig({
+  extends: [recommended, effect],
+});
+```
+
+### Override rules and options
+
+Rules in your own config override the preset. Turn a rule off, downgrade it to `warn`, or pass options:
+
+```json
+{
+  "extends": [
+    "./node_modules/@adriandmitroca/oxlint-plugin-anti-slop/configs/recommended.json"
+  ],
+  "rules": {
+    "anti-slop/no-object-parameters": "off",
+    "anti-slop/no-unknown-returns": "warn",
+    "anti-slop/no-runtime-typeof": ["error", { "allowInTypeGuards": true }],
+    "anti-slop/require-safety-comment-for-type-assertion": ["error", { "markers": ["INVARIANT", "SAFETY"] }]
+  }
+}
+```
+
+Only two rules take options:
+
+| Rule | Option | Default |
+| --- | --- | --- |
+| [`no-runtime-typeof`](#no-runtime-typeof) | `allowInTypeGuards`: allow `typeof` inside type predicate and assertion functions | `false` |
+| [`require-safety-comment-for-type-assertion`](#require-safety-comment-for-type-assertion) | `markers`: comment markers that justify an assertion | `["SAFETY"]` |
+
+The other rules have no options. To change their behavior, change the rule in this fork.
+
+### Pick rules manually
+
+Register the plugins and enable each rule by name. No rule runs until you enable it.
 
 ```json
 {
@@ -29,7 +93,11 @@ npm i -D oxlint @adriandmitroca/oxlint-plugin-anti-slop
 }
 ```
 
-The `/effect` entry point is optional. Rule names are the same as in the configuration below.
+The `/effect` entry point is optional. See [Rules](#rules) for every rule name.
+
+### Releases
+
+Releases are automatic. Every push to `main` runs [semantic-release](https://github.com/semantic-release/semantic-release), which reads [Conventional Commits](https://www.conventionalcommits.org/): `fix:` releases a patch, `feat:` a minor, and `feat!:` or `BREAKING CHANGE:` a major. Release notes are in [GitHub Releases](https://github.com/adriandmitroca/anti-slop/releases).
 
 ## Install with an agent skill
 
@@ -454,7 +522,10 @@ const userId = value as UserId;
 ```bash
 pnpm install
 pnpm check
+pnpm build
 ```
+
+`pnpm build` compiles `src/` to `dist/` and generates the presets in `configs/` from the compiled plugins.
 
 `src/` is canonical. After changing production source, run `pnpm sync:skill-assets`; CI checks that the skill's bundled copy remains identical. `pnpm check` runs Oxlint, every RuleTester suite, TypeScript typechecking, and the skill-asset drift check.
 
